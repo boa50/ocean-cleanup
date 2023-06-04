@@ -42,7 +42,7 @@ df %>%
 # Miles travels (comparing with travels around the world)
 #
 
-# Cleanups qtd
+# Cleanups qty
 # Cleanups pounds
 # Location heatmap
 # Where are the groups
@@ -59,3 +59,21 @@ df %>%
 df %>%
   select(id, pounds) %>%
   write_csv("pounds.csv")
+
+# Miles
+df %>%
+  select(id, miles) %>%
+  write_csv("miles.csv")
+
+# Volunteers
+df %>%
+  select(id, adults, children) %>%
+  write_csv("volunteers.csv")
+
+# Locations
+df %>%
+  mutate(geo_info = paste(gps_lat, gps_long, sep = ","),
+         city = gsub("^(.*),.*", "\\1", zone),
+         state = gsub(",.*", "", state)) %>%
+  select(id, geo_info, city, state) %>%
+  write_csv("locations.csv")
