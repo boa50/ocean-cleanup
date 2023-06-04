@@ -1,8 +1,10 @@
 library(readr)
 library(dplyr)
+library(tidyr)
 library(janitor)
 library(lubridate)
 library(ggplot2)
+library(stringr)
 
 ### UNDERSTANDING THE DATA
 df <- read_csv("data/ocean-cleanup.csv") %>%
@@ -77,3 +79,11 @@ df %>%
          state = gsub(",.*", "", state)) %>%
   select(id, geo_info, city, state) %>%
   write_csv("locations.csv")
+
+# Common objects
+df %>%
+  select(c(1,15:61)) %>%
+  pivot_longer(-1, names_to = "object", values_to = "quantity") %>%
+  filter(quantity > 0) %>%
+  mutate(object = str_replace_all(object, "_", " ") %>% str_to_sentence) %>%
+  write_csv("objects.csv")
