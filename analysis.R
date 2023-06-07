@@ -49,7 +49,7 @@ df %>%
 # Location heatmap
 # Where are the groups
 # What are the most common things
-# Which cleanup type is the most efficient
+# Which cleanup type is the most efficient (itens collected per person)
 
 ### GETTING ENOUGH INFORMATION
 # Date
@@ -82,8 +82,19 @@ df %>%
 
 # Common objects
 df %>%
-  select(c(1,15:61)) %>%
+  select(c(8,15:61)) %>%
   pivot_longer(-1, names_to = "object", values_to = "quantity") %>%
   filter(quantity > 0) %>%
+  group_by(cleanup_date, object) %>%
+  summarise(quantity = sum(quantity)) %>%
   mutate(object = str_replace_all(object, "_", " ") %>% str_to_sentence) %>%
   write_csv("objects.csv")
+
+# Cleanup items collection per person
+df %>%
+  select(id, cleanup_type, people, total_items_collected) %>%
+  filter(people > 0) %>%
+  mutate(items_collected_per_person = total_items_collected / people,
+         cleanup_type = gsub(" .*", "\\1", cleanup_type)) %>%
+  select(-c(people, total_items_collected)) %>%
+  write_csv("cleanup_type.csv")
