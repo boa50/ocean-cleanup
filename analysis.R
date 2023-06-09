@@ -25,12 +25,12 @@ df <- df %>%
     is_group_activity = !is.na(group_name),
     cleanup_date = as.Date(cleanup_date, "%d-%b-%y")
   ) %>%
-  filter(year(cleanup_date) <= 2020) %>%
+  filter(year(cleanup_date) <= 2019) %>%
   filter(year(cleanup_date) >= 2015)
 
 # Verifying the number of records per date
 df %>%
-  filter(year(cleanup_date) <= 2020) %>%
+  filter(year(cleanup_date) <= 2019) %>%
   filter(year(cleanup_date) >= 2015) %>%
   group_by(cleanup_date) %>%
   summarise(qty = n()) %>%
